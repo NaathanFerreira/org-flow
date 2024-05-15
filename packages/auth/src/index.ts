@@ -6,8 +6,13 @@ import {
   MongoAbility,
 } from '@casl/ability'
 
+import { User } from './models/user'
+import { permissions } from './permissions'
+
+// code below documentation: https://casl.js.org/v6/en/cookbook/roles-with-static-permissions#abilities
+
 const actions = ['manage', 'invite', 'delete'] as const
-const subjects = ['User', 'all'] as const
+const subjects = ['User', 'all'] as const // entities
 type AppAbilities = [
   (typeof actions)[number],
   (
@@ -18,13 +23,18 @@ type AppAbilities = [
 
 export type AppAbility = MongoAbility<AppAbilities>
 export const createAppAbility = createMongoAbility as CreateAbility<AppAbility>
-// code above documentation: https://casl.js.org/v6/en/cookbook/roles-with-static-permissions#abilities
 
-const { build, can, cannot } = new AbilityBuilder(createAppAbility)
+export function defineAbilityFor(user: User) {
+  const builder = new AbilityBuilder(createAppAbility)
 
-// by default, cannot is set for all, nobody can do nothing
+  // if inside permissions object doesn't exist a specific key (user role)
+  if (typeof permissions[user.role] !== 'function') {
+    throw new Error(`Permissions for role ${user.role} not found`)
+  }
 
-can('invite', 'User')
-cannot('delete', 'User') // just for readability
+  permissions[user.role](user, builder)
 
-export const ability = build()
+  const ability = builder.build()
+
+  return ability
+}
