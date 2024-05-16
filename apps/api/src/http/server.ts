@@ -17,6 +17,7 @@ app.setValidatorCompiler(validatorCompiler)
 
 app.register(fastifyCors)
 
+// routes
 app.register(createAccount)
 
 app.listen({ port: 3333 }).then(() => {
