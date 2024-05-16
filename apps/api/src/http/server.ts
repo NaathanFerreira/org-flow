@@ -1,4 +1,5 @@
 import fastifyCors from '@fastify/cors'
+import fastifyJwt from '@fastify/jwt'
 import fastifySwagger from '@fastify/swagger'
 import fastifySwaggerUI from '@fastify/swagger-ui'
 import { fastify } from 'fastify'
@@ -9,7 +10,7 @@ import {
   ZodTypeProvider,
 } from 'fastify-type-provider-zod'
 
-import { createAccount } from './routes/auth/create-account'
+import { authenticateWithPassword, createAccount } from './routes/auth'
 
 const app = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -33,10 +34,14 @@ app.register(fastifySwaggerUI, {
   routePrefix: '/documentation',
 })
 
+app.register(fastifyJwt, {
+  secret: 'my-jwt-secret',
+})
 app.register(fastifyCors)
 
 // routes
 app.register(createAccount)
+app.register(authenticateWithPassword)
 
 async function run() {
   await app.ready()
