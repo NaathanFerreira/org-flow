@@ -10,7 +10,11 @@ import {
   ZodTypeProvider,
 } from 'fastify-type-provider-zod'
 
-import { authenticateWithPassword, createAccount } from './routes/auth'
+import {
+  authenticateWithPassword,
+  createAccount,
+  getProfile,
+} from './routes/auth'
 
 const app = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -42,6 +46,7 @@ app.register(fastifyCors)
 // routes
 app.register(createAccount)
 app.register(authenticateWithPassword)
+app.register(getProfile)
 
 async function run() {
   await app.ready()
