@@ -14,6 +14,10 @@ import { organizationSubject } from './subjects/organization'
 import { projectSubject } from './subjects/project'
 import { userSubject } from './subjects/user'
 
+export * from './models/project'
+export * from './models/organization'
+export * from './models/user'
+
 // code below documentation: https://casl.js.org/v6/en/cookbook/roles-with-static-permissions#abilities
 
 const appAbilitiesSchema = z.union([
