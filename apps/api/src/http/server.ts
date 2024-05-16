@@ -1,6 +1,9 @@
 import fastifyCors from '@fastify/cors'
+import fastifySwagger from '@fastify/swagger'
+import fastifySwaggerUI from '@fastify/swagger-ui'
 import { fastify } from 'fastify'
 import {
+  jsonSchemaTransform,
   serializerCompiler,
   validatorCompiler,
   ZodTypeProvider,
@@ -10,16 +13,40 @@ import { createAccount } from './routes/auth/create-account'
 
 const app = fastify().withTypeProvider<ZodTypeProvider>()
 
-// set how fastify will serialize (transform input and output data in endpoints), in this case using zod serializer
+// docs: https://github.com/turkerdev/fastify-type-provider-zod
 app.setSerializerCompiler(serializerCompiler)
-// set how fastify will validate data, in this case using zod validator
 app.setValidatorCompiler(validatorCompiler)
+
+app.register(fastifySwagger, {
+  openapi: {
+    info: {
+      title: 'Next.js SaaS',
+      description: 'Full-stack SaaS app with multi-tenant & RBAC.',
+      version: '1.0.0',
+    },
+    servers: [],
+  },
+  transform: jsonSchemaTransform,
+})
+
+app.register(fastifySwaggerUI, {
+  routePrefix: '/documentation',
+})
 
 app.register(fastifyCors)
 
 // routes
 app.register(createAccount)
 
-app.listen({ port: 3333 }).then(() => {
-  console.log('HTTP Server running! 🚀')
-})
+async function run() {
+  await app.ready()
+
+  await app.listen({
+    port: 3333,
+  })
+
+  console.log('HTTP Server Running! 🚀')
+  console.log(`Documentation running at http://localhost:3333/documentation`)
+}
+
+run()
