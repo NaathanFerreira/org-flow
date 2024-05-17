@@ -1,5 +1,13 @@
 import { authenticateWithPassword } from './authenticate-with-password'
 import { createAccount } from './create-account'
 import { getProfile } from './get-profile'
+import { requestPasswordRecover } from './request-password-recover'
+import { resetPassword } from './reset-password'
 
-export { createAccount, authenticateWithPassword, getProfile }
+export {
+  createAccount,
+  authenticateWithPassword,
+  getProfile,
+  requestPasswordRecover,
+  resetPassword,
+}
