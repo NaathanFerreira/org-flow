@@ -1,3 +1,4 @@
+import { env } from '@saas/env'
 import type { FastifyInstance } from 'fastify'
 import type { ZodTypeProvider } from 'fastify-type-provider-zod'
 import z from 'zod'
@@ -36,15 +37,15 @@ export async function authenticateWithGithub(app: FastifyInstance) {
       )
 
       // https://github.com/settings/developers -> OAuth apps (client_id, secret and uri)
-      githubOAuthUrl.searchParams.set('client_id', 'Ov23liyZgWGZmenE0v9m')
+      githubOAuthUrl.searchParams.set('client_id', env.GITHUB_OAUTH_CLIENT_ID)
       githubOAuthUrl.searchParams.set(
         'client_secret',
-        '395a2a141d19d505fd54ec6938c108e0623510c3',
+        env.GITHUB_OAUTH_CLIENT_SECRET,
       )
       // redirect on front-end (next api route)
       githubOAuthUrl.searchParams.set(
         'redirect_uri',
-        'http://localhost:3000/api/auth/callback',
+        env.GITHUB_OAUTH_REDIRECT_URI,
       )
       githubOAuthUrl.searchParams.set('code', code)
 
