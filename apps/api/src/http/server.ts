@@ -20,6 +20,7 @@ import {
   requestPasswordRecover,
   resetPassword,
 } from './routes/auth'
+import { createOrganization } from './routes/orgs'
 const app = fastify().withTypeProvider<ZodTypeProvider>()
 
 // docs: https://github.com/turkerdev/fastify-type-provider-zod
@@ -57,13 +58,16 @@ app.register(fastifyJwt, {
 })
 app.register(fastifyCors)
 
-// routes
+// auth routes
 app.register(createAccount)
 app.register(authenticateWithPassword)
 app.register(getProfile)
 app.register(requestPasswordRecover)
 app.register(resetPassword)
 app.register(authenticateWithGithub)
+
+// organizations routes
+app.register(createOrganization)
 
 async function run() {
   await app.ready()
