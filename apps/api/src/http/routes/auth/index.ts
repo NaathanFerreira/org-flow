@@ -1,3 +1,4 @@
+import { authenticateWithGithub } from './authenticate-with-github'
 import { authenticateWithPassword } from './authenticate-with-password'
 import { createAccount } from './create-account'
 import { getProfile } from './get-profile'
@@ -10,4 +11,5 @@ export {
   getProfile,
   requestPasswordRecover,
   resetPassword,
+  authenticateWithGithub,
 }

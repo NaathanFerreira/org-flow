@@ -12,6 +12,7 @@ import {
 
 import { errorHandler } from './error-handler'
 import {
+  authenticateWithGithub,
   authenticateWithPassword,
   createAccount,
   getProfile,
@@ -54,6 +55,7 @@ app.register(authenticateWithPassword)
 app.register(getProfile)
 app.register(requestPasswordRecover)
 app.register(resetPassword)
+app.register(authenticateWithGithub)
 
 async function run() {
   await app.ready()
