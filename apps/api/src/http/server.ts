@@ -29,6 +29,7 @@ import {
   transferOrganization,
   updateOrganization,
 } from './routes/orgs'
+import { createProject } from './routes/projects'
 const app = fastify().withTypeProvider<ZodTypeProvider>()
 
 // docs: https://github.com/turkerdev/fastify-type-provider-zod
@@ -82,6 +83,9 @@ app.register(getOrganizations)
 app.register(updateOrganization)
 app.register(shutdownOrganization)
 app.register(transferOrganization)
+
+// projects routes
+app.register(createProject)
 
 async function run() {
   await app.ready()
