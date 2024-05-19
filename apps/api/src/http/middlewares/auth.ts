@@ -3,6 +3,7 @@ import fastifyPlugin from 'fastify-plugin'
 
 import { prisma } from '@/lib/prisma'
 
+import { BadRequestError } from '../routes/_errors/bad-request-errors'
 import { UnauthorizedError } from '../routes/_errors/unauthorized-error'
 
 export const auth = fastifyPlugin(async (app: FastifyInstance) => {
@@ -20,6 +21,16 @@ export const auth = fastifyPlugin(async (app: FastifyInstance) => {
 
     request.getUserMembership = async (organizationSlug: string) => {
       const userId = await request.getCurrentUserId()
+
+      const organizationExists = await prisma.organization.findUnique({
+        where: {
+          slug: organizationSlug,
+        },
+      })
+
+      if (!organizationExists) {
+        throw new BadRequestError('Organization does not exists.')
+      }
 
       const member = await prisma.member.findFirst({
         where: {
