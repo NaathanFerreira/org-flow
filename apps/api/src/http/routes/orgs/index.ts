@@ -3,6 +3,7 @@ import { getMembership } from './get-membership'
 import { getOrganization } from './get-organization'
 import { getOrganizations } from './get-organizations'
 import { shutdownOrganization } from './shutdown-organization'
+import { transferOrganization } from './transfer-organization'
 import { updateOrganization } from './update-organization'
 
 export {
@@ -12,4 +13,5 @@ export {
   getOrganizations,
   updateOrganization,
   shutdownOrganization,
+  transferOrganization,
 }
