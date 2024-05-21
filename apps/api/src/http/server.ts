@@ -20,6 +20,7 @@ import {
   requestPasswordRecover,
   resetPassword,
 } from './routes/auth'
+import { createInvite } from './routes/invites'
 import { getMembers, removeMember, updateMember } from './routes/members'
 import {
   createOrganization,
@@ -102,6 +103,7 @@ app.register(updateProject)
 app.register(getMembers)
 app.register(updateMember)
 app.register(removeMember)
+app.register(createInvite)
 
 async function run() {
   await app.ready()
