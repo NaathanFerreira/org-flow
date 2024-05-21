@@ -20,6 +20,7 @@ export async function updateProject(app: FastifyInstance) {
         schema: {
           tags: ['projects'],
           summary: 'Update a project',
+          security: [{ bearerAuth: [] }],
           params: z.object({
             slug: z.string(),
             projectId: z.string().uuid(),

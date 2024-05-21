@@ -20,6 +20,7 @@ import {
   requestPasswordRecover,
   resetPassword,
 } from './routes/auth'
+import { getMembers, removeMember, updateMember } from './routes/members'
 import {
   createOrganization,
   getMembership,
@@ -96,6 +97,11 @@ app.register(deleteProject)
 app.register(getProject)
 app.register(getProjects)
 app.register(updateProject)
+
+// members routes
+app.register(getMembers)
+app.register(updateMember)
+app.register(removeMember)
 
 async function run() {
   await app.ready()

@@ -1,3 +1,4 @@
+import { rolesSchema } from '@saas/auth'
 import type { FastifyInstance } from 'fastify'
 import type { ZodTypeProvider } from 'fastify-type-provider-zod'
 import z from 'zod'
@@ -8,36 +9,29 @@ import { getUserPermissions } from '@/utils/get-user-permissions'
 
 import { UnauthorizedError } from '../_errors/unauthorized-error'
 
-export async function getProjects(app: FastifyInstance) {
+export async function getMembers(app: FastifyInstance) {
   app
     .withTypeProvider<ZodTypeProvider>()
     .register(auth)
     .get(
-      '/organizations/:orgSlug/projects',
+      '/organizations/:slug/members',
       {
         schema: {
-          tags: ['projects'],
-          summary: 'List all projects of a organization',
+          tags: ['members'],
+          summary: 'List members of a organization',
           security: [{ bearerAuth: [] }],
           params: z.object({
-            orgSlug: z.string(),
+            slug: z.string(),
           }),
           response: {
             200: z.object({
-              projects: z.array(
+              members: z.array(
                 z.object({
                   id: z.string(),
-                  name: z.string(),
-                  description: z.string(),
-                  slug: z.string(),
+                  role: rolesSchema,
+                  name: z.string().nullable(),
+                  email: z.string(),
                   avatarUrl: z.string().nullable(),
-                  organizationId: z.string(),
-                  createdAt: z.date(),
-                  owner: z.object({
-                    id: z.string(),
-                    name: z.string().nullable(),
-                    avatarUrl: z.string().nullable(),
-                  }),
                 }),
               ),
             }),
@@ -46,43 +40,48 @@ export async function getProjects(app: FastifyInstance) {
       },
       async (request, reply) => {
         const userId = await request.getCurrentUserId()
-        const { orgSlug } = await request.params
+        const { slug } = await request.params
         const { membership, organization } =
-          await request.getUserMembership(orgSlug)
+          await request.getUserMembership(slug)
 
         const { cannot } = await getUserPermissions(userId, membership.role)
 
-        if (cannot('get', 'Project')) {
-          throw new UnauthorizedError('You are not allowed to list projects')
+        if (cannot('get', 'User')) {
+          throw new UnauthorizedError('You are not allowed to list members')
         }
 
-        const projects = await prisma.project.findMany({
+        const members = await prisma.member.findMany({
           where: {
             organizationId: organization.id,
           },
           select: {
             id: true,
-            name: true,
-            slug: true,
-            description: true,
-            ownerId: true,
-            avatarUrl: true,
-            organizationId: true,
-            createdAt: true,
-            owner: {
+            role: true,
+            user: {
               select: {
                 id: true,
                 name: true,
+                email: true,
                 avatarUrl: true,
               },
             },
           },
           orderBy: {
-            createdAt: 'desc',
+            role: 'asc',
           },
         })
 
-        return reply.status(200).send({ projects })
+        const membersWithRoles = members.map(
+          ({ user: { id: userId, ...user }, ...member }) => {
+            return {
+              ...user,
+              ...member,
+              userId,
+            }
+          },
+        )
+
+        return reply.status(200).send({ members: membersWithRoles })
       },
     )
 }
