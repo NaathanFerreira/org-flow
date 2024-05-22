@@ -5,7 +5,7 @@ import z from 'zod'
 
 import { prisma } from '@/lib/prisma'
 
-import { BadRequestError } from '../_errors/bad-request-errors'
+import { BadRequestError } from '../_errors/bad-request-error'
 
 // docs: https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps#1-request-a-users-github-identity
 

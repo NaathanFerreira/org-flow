@@ -25,7 +25,9 @@ import {
   createInvite,
   getInvite,
   getInvites,
+  getPendingInvites,
   rejectInvite,
+  revokeInvite,
 } from './routes/invites'
 import { getMembers, removeMember, updateMember } from './routes/members'
 import {
@@ -116,6 +118,8 @@ app.register(getInvite)
 app.register(getInvites)
 app.register(accpetInvite)
 app.register(rejectInvite)
+app.register(revokeInvite)
+app.register(getPendingInvites)
 
 async function run() {
   await app.ready()

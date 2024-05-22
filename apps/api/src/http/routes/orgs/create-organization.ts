@@ -6,7 +6,7 @@ import { auth } from '@/http/middlewares/auth'
 import { prisma } from '@/lib/prisma'
 import { createSlug } from '@/utils/create-slug'
 
-import { BadRequestError } from '../_errors/bad-request-errors'
+import { BadRequestError } from '../_errors/bad-request-error'
 
 export async function createOrganization(app: FastifyInstance) {
   app

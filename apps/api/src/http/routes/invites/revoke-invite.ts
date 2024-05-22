@@ -4,21 +4,24 @@ import z from 'zod'
 
 import { auth } from '@/http/middlewares/auth'
 import { prisma } from '@/lib/prisma'
+import { getUserPermissions } from '@/utils/get-user-permissions'
 
 import { BadRequestError } from '../_errors/bad-request-error'
+import { UnauthorizedError } from '../_errors/unauthorized-error'
 
-export async function rejectInvite(app: FastifyInstance) {
+export async function revokeInvite(app: FastifyInstance) {
   app
     .withTypeProvider<ZodTypeProvider>()
     .register(auth)
     .post(
-      '/invites/:inviteId/reject',
+      '/organizations/:slug/invites/:inviteId/revoke',
       {
         schema: {
           tags: ['invites'],
-          summary: 'Reject an invite',
+          summary: 'Revoke a sent invite',
           security: [{ bearerAuth: [] }],
           params: z.object({
+            slug: z.string(),
             inviteId: z.string().uuid(),
           }),
           response: {
@@ -28,11 +31,20 @@ export async function rejectInvite(app: FastifyInstance) {
       },
       async (request, reply) => {
         const userId = await request.getCurrentUserId()
-        const { inviteId } = await request.params
+        const { slug, inviteId } = await request.params
+        const { membership, organization } =
+          await request.getUserMembership(slug)
+
+        const { cannot } = await getUserPermissions(userId, membership.role)
+
+        if (cannot('delete', 'Invite')) {
+          throw new UnauthorizedError('You are not allowed to revoke invites')
+        }
 
         const invite = await prisma.invite.findUnique({
           where: {
             id: inviteId,
+            organizationId: organization.id,
           },
         })
 
@@ -40,23 +52,9 @@ export async function rejectInvite(app: FastifyInstance) {
           throw new BadRequestError('Invite not found.')
         }
 
-        const user = await prisma.user.findUnique({
-          where: {
-            id: userId,
-          },
-        })
-
-        if (!user) {
-          throw new BadRequestError('User not found.')
-        }
-
-        if (invite.email !== user.email) {
-          throw new BadRequestError('This invite belongs to another user.')
-        }
-
         await prisma.invite.delete({
           where: {
-            id: invite.id,
+            id: inviteId,
           },
         })
 

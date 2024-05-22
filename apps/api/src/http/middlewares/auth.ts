@@ -3,7 +3,7 @@ import fastifyPlugin from 'fastify-plugin'
 
 import { prisma } from '@/lib/prisma'
 
-import { BadRequestError } from '../routes/_errors/bad-request-errors'
+import { BadRequestError } from '../routes/_errors/bad-request-error'
 import { UnauthorizedError } from '../routes/_errors/unauthorized-error'
 
 export const auth = fastifyPlugin(async (app: FastifyInstance) => {

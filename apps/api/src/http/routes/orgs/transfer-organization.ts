@@ -8,7 +8,7 @@ import { UnauthorizedError } from '@/http/routes/_errors/unauthorized-error'
 import { prisma } from '@/lib/prisma'
 import { getUserPermissions } from '@/utils/get-user-permissions'
 
-import { BadRequestError } from '../_errors/bad-request-errors'
+import { BadRequestError } from '../_errors/bad-request-error'
 
 export async function transferOrganization(app: FastifyInstance) {
   app
