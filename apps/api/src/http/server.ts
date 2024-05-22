@@ -20,6 +20,7 @@ import {
   requestPasswordRecover,
   resetPassword,
 } from './routes/auth'
+import { getOrganizationBilling } from './routes/billing/get-organization-billing'
 import {
   accpetInvite,
   createInvite,
@@ -120,6 +121,9 @@ app.register(accpetInvite)
 app.register(rejectInvite)
 app.register(revokeInvite)
 app.register(getPendingInvites)
+
+// billing routes
+app.register(getOrganizationBilling)
 
 async function run() {
   await app.ready()
