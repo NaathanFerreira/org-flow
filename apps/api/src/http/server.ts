@@ -20,7 +20,13 @@ import {
   requestPasswordRecover,
   resetPassword,
 } from './routes/auth'
-import { createInvite, getInvite } from './routes/invites'
+import {
+  accpetInvite,
+  createInvite,
+  getInvite,
+  getInvites,
+  rejectInvite,
+} from './routes/invites'
 import { getMembers, removeMember, updateMember } from './routes/members'
 import {
   createOrganization,
@@ -107,6 +113,9 @@ app.register(removeMember)
 // invite routes
 app.register(createInvite)
 app.register(getInvite)
+app.register(getInvites)
+app.register(accpetInvite)
+app.register(rejectInvite)
 
 async function run() {
   await app.ready()
