@@ -2,7 +2,7 @@ import './globals.css'
 
 import type { Metadata } from 'next'
 
-import { ThemeProvider } from '@/components/theme/theme-provider'
+import { Providers } from './providers'
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -15,14 +15,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <ThemeProvider
-        attribute="class"
-        defaultTheme="system"
-        enableSystem
-        disableTransitionOnChange
-      >
+      <Providers>
         <body>{children}</body>
-      </ThemeProvider>
+      </Providers>
     </html>
   )
 }
