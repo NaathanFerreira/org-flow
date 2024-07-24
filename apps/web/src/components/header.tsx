@@ -14,7 +14,7 @@ export async function Header() {
   const userPermissions = await ability()
 
   return (
-    <header className="mx-auto flex max-w-[1200px] items-center justify-between border-b pb-2">
+    <header className="mx-auto flex max-w-[1200px] items-center justify-between">
       <div className="flex items-center gap-3">
         <Image src={orgIcon} className="size-6 dark:invert" alt="Org" />
         <Slash className="size-3 -rotate-[24deg] text-border" />
