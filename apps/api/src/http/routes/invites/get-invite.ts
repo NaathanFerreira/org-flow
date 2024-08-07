@@ -19,20 +19,22 @@ export async function getInvite(app: FastifyInstance) {
         }),
         response: {
           200: z.object({
-            id: z.string().uuid(),
-            role: rolesSchema,
-            email: z.string().email(),
-            createdAt: z.date(),
-            organization: z.object({
-              name: z.string(),
+            invite: z.object({
+              id: z.string().uuid(),
+              role: rolesSchema,
+              email: z.string().email(),
+              createdAt: z.date(),
+              organization: z.object({
+                name: z.string(),
+              }),
+              author: z
+                .object({
+                  id: z.string(),
+                  name: z.string().nullable(),
+                  avatarUrl: z.string().nullable(),
+                })
+                .nullable(),
             }),
-            author: z
-              .object({
-                id: z.string(),
-                name: z.string().nullable(),
-                avatarUrl: z.string().nullable(),
-              })
-              .nullable(),
           }),
         },
       },
@@ -68,7 +70,9 @@ export async function getInvite(app: FastifyInstance) {
         throw new BadRequestError('Invite not found.')
       }
 
-      return reply.status(200).send({ ...invite })
+      console.log(invite)
+
+      return reply.status(200).send({ invite })
     },
   )
 }
