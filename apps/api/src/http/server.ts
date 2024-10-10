@@ -130,6 +130,7 @@ async function run() {
 
   await app.listen({
     port: env.PORT,
+    host: '0.0.0.0',
   })
 
   console.log('HTTP Server Running! 🚀')
