@@ -129,7 +129,7 @@ async function run() {
   await app.ready()
 
   await app.listen({
-    port: env.SERVER_PORT,
+    port: env.PORT,
   })
 
   console.log('HTTP Server Running! 🚀')
